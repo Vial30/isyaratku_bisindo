@@ -1,0 +1,130 @@
+{
+    "0": {
+        "gloss": "Air",
+        "english": "Water"
+    },
+    "1": {
+        "gloss": "Belajar",
+        "english": "Learn"
+    },
+    "2": {
+        "gloss": "Cari",
+        "english": "Search"
+    },
+    "3": {
+        "gloss": "Hari",
+        "english": "Day"
+    },
+    "4": {
+        "gloss": "Ingat",
+        "english": "Remember"
+    },
+    "5": {
+        "gloss": "Lagi",
+        "english": "Again"
+    },
+    "6": {
+        "gloss": "Maaf",
+        "english": "Sorry"
+    },
+    "7": {
+        "gloss": "Makan",
+        "english": "Eat"
+    },
+    "8": {
+        "gloss": "Motor",
+        "english": "Motorcycle"
+    },
+    "9": {
+        "gloss": "Saya",
+        "english": "I"
+    },
+    "10": {
+        "gloss": "Terima kasih",
+        "english": "Thank you"
+    },
+    "11": {
+        "gloss": "Tuli",
+        "english": "Deaf"
+    },
+    "12": {
+        "gloss": "Apa",
+        "english": "What"
+    },
+    "13": {
+        "gloss": "Siapa",
+        "english": "Who"
+    },
+    "14": {
+        "gloss": "Kapan",
+        "english": "When"
+    },
+    "15": {
+        "gloss": "Di mana",
+        "english": "Where"
+    },
+    "16": {
+        "gloss": "Mengapa",
+        "english": "Why"
+    },
+    "17": {
+        "gloss": "Bagaimana",
+        "english": "How"
+    },
+    "18": {
+        "gloss": "Merah",
+        "english": "Red"
+    },
+    "19": {
+        "gloss": "Kuning",
+        "english": "Yellow"
+    },
+    "20": {
+        "gloss": "Hijau",
+        "english": "Green"
+    },
+    "21": {
+        "gloss": "Hitam",
+        "english": "Black"
+    },
+    "22": {
+        "gloss": "Dengar",
+        "english": "Hear"
+    },
+    "23": {
+        "gloss": "Berangkat",
+        "english": "Depart"
+    },
+    "24": {
+        "gloss": "Datang",
+        "english": "Come"
+    },
+    "25": {
+        "gloss": "Teman",
+        "english": "Friend"
+    },
+    "26": {
+        "gloss": "Keluarga",
+        "english": "Family"
+    },
+    "27": {
+        "gloss": "Rumah",
+        "english": "House"
+    },
+    "28": {
+        "gloss": "Pagi",
+        "english": "Morning"
+    },
+    "29": {
+        "gloss": "Siang",
+        "english": "Noon"
+    },
+    "30": {
+        "gloss": "Sore",
+        "english": "Afternoon"
+    },
+    "31": {
+        "gloss": "Malam",
+        "english": "Night"
+    }
+}

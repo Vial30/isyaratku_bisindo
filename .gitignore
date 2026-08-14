@@ -1,0 +1,59 @@
+# Raw and intermediate dataset files (Heavy videos, frames, keypoint numpy dumps)
+model/dataset/
+model/dataset_frames/
+model/dataset_keypoints/
+*.zip
+*.tar.gz
+*.mp4
+*.avi
+
+# Checkpoints and temporary models
+*.pth.tar
+*.ckpt
+latest_checkpoint*.pth
+loso_progress*.pth
+
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.venv
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Node & Mobile Frontend (Expo / React Native)
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# System files & IDE
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.agents/

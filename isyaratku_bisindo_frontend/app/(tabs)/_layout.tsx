@@ -56,13 +56,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      {/* Hide deleted riwayat tab from navigation */}
-      <Tabs.Screen
-        name="riwayat"
-        options={{
-          href: null,
-        }}
-      />
     </Tabs>
   );
 }

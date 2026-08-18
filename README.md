@@ -124,15 +124,21 @@ Sistem dievaluasi secara ketat menggunakan metode **Leave-One-Subject-Out (LOSO)
     ├── training/                   # Skrip Pelatihan LOSO CV & Ekstraksi Koordinat
     │   ├── train_local_bisindo.py  # Pelatihan PyTorch LOSO Cross-Validation
     │   ├── train_colab_bisindo.py  # Skrip Pelatihan di Google Colab GPU
-    │   └── extract_keypoints.py    # Ekstraksi Koordinat MediaPipe
+    │   ├── extract_keypoints.py    # Ekstraksi Koordinat MediaPipe
+    │   ├── extract_dataset_frames.py
+    │   └── export_offline_model.py # Skrip Konversi & Ekspor Model
     ├── weights/                    # Bobot Model PyTorch & MediaPipe Landmarkers
+    │   ├── best_bisindo_model_282dim.pth
+    │   ├── best_bisindo_model_63dim.pth
     │   ├── best_bisindo_residual_bilstm.pth
     │   ├── hand_landmarker.task
     │   └── pose_landmarker.task
-    └── evaluation/                 # Grafik & Metrik Hasil Evaluasi LOSO
-        ├── confusion_matrix_bab4.png
-        ├── evaluation_metrics_bab4.json
-        └── RANGKUMAN_HASIL_TRAINING_BAB4_5.md
+    ├── evaluation/                 # Grafik & Metrik Hasil Evaluasi LOSO
+    │   ├── confusion_matrix_bab4.png
+    │   ├── evaluation_metrics_bab4.json
+    │   └── RANGKUMAN_HASIL_TRAINING_BAB4_5.md
+    └── references/                 # Jurnal Acuan Penelitian (Munsarif et al.)
+        └── munsarif_paper_extracted.txt
 ```
 
 ---

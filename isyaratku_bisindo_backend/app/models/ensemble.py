@@ -22,6 +22,8 @@ from app.models.architecture import DeepResidualBiLSTMClassifier
 from app.utils.logger import logger
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if DEVICE.type == "cpu":
+    torch.set_num_threads(2)
 
 class BISINDOEnsembleRecognizer:
     """
@@ -41,7 +43,7 @@ class BISINDOEnsembleRecognizer:
 
     def load_models(self):
         """Loads both checkpoint files and labels mapping."""
-        logger.info(f"Menginisialisasi BISINDO Ensemble Recognizer di {self.device}...")
+        logger.info(f"Menginisialisasi BISINDO Ensemble Recognizer di {self.device} (CPU Threads: {torch.get_num_threads() if self.device.type == 'cpu' else 'CUDA'})...")
         
         try:
             # 1. Load Model 282 (Holistic)

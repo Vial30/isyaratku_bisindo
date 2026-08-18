@@ -1,0 +1,21 @@
+[Unit]
+Description=Isyaratku BISINDO Backend FastAPI & WebSocket Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/isyaratku/isyaratku_bisindo_backend
+Environment="PATH=/var/www/isyaratku/isyaratku_bisindo_backend/venv/bin"
+Environment="PYTHONUNBUFFERED=1"
+Environment="HOST=0.0.0.0"
+Environment="PORT=8000"
+ExecStart=/var/www/isyaratku/isyaratku_bisindo_backend/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1
+Restart=always
+RestartSec=5s
+
+# Resource limits
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

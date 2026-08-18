@@ -49,6 +49,7 @@ isyaratku_bisindo_backend/
 ├── mediapipe_models/              # File Task MediaPipe
 │   ├── hand_landmarker.task
 │   └── pose_landmarker.task
+├── Dockerfile                     # Containerization untuk IDCloudHost
 ├── requirements.txt               # Daftar Dependensi Python
 ├── run.py                         # Skrip Menjalankan Server
 └── README.md
@@ -58,17 +59,33 @@ isyaratku_bisindo_backend/
 
 ## ⚡ 3. Cara Menjalankan Server
 
-### A. Instalasi Dependensi
+### A. Menjalankan Lokal (Python Direct)
 ```bash
-cd c:\TA\Mobile\isyaratku_bisindo_backend
-pip install -r requirements.txt
-```
+# 1. Masuk ke direktori backend
+cd isyaratku_bisindo_backend
 
-### B. Menjalankan Server
-```bash
+# 2. Install dependensi
+pip install -r requirements.txt
+
+# 3. Jalankan server
 python run.py
 ```
-Server akan aktif di `http://0.0.0.0:8000`.
+Server akan aktif di `http://0.0.0.0:8000` dan WebSocket di `ws://0.0.0.0:8000/v1/recognize`.
+
+### B. Menjalankan dengan Docker Container
+```bash
+# Build image
+docker build -t isyaratku-backend:latest .
+
+# Jalankan container
+docker run -d --name isyaratku_backend -p 8000:8000 isyaratku-backend:latest
+```
+
+### C. Deployment ke Cloud VPS IDCloudHost
+Lihat panduan lengkap di [../DEPLOY_IDCLOUDHOST.md](../DEPLOY_IDCLOUDHOST.md) atau jalankan:
+```bash
+sudo bash ../deploy/setup_idcloudhost.sh
+```
 
 ---
 

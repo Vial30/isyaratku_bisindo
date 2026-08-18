@@ -90,8 +90,8 @@ async def handle_websocket_session(websocket: WebSocket):
                         await websocket.send_json({"type": "status", "message": "Buffer direset"})
                         continue
                     elif parsed.get("type") == "finish_gesture":
-                        # Instant prediction triggered by client
-                        seq_features = buffer.get_sequence_features()
+                        # Instant prediction for burst gesture
+                        seq_features = buffer.get_sequence_features(min_frames=6)
                         if seq_features is not None:
                             pred_result = await asyncio.to_thread(recognizer.predict, seq_features)
                             try:
@@ -104,7 +104,8 @@ async def handle_websocket_session(websocket: WebSocket):
                                     "class_id": pred_result["predicted_class_id"],
                                     "latency_ms": pred_result["latency_ms"],
                                     "hand_detected": True,
-                                    "top_candidates": pred_result["top_candidates"]
+                                    "top_candidates": pred_result["top_candidates"],
+                                    "is_burst": True
                                 })
                             except Exception:
                                 break
@@ -122,45 +123,43 @@ async def handle_websocket_session(websocket: WebSocket):
 
             try:
                 frame_bgr = decode_image_data(raw_data)
-            except Exception as e:
-                # Ignore corrupted frame
+            except Exception:
                 continue
 
             frame_count += 1
 
-            # 1. Ekstrak MediaPipe Hand & Pose Landmark Positions in worker thread
+            # 1. Extract MediaPipe Hand & Pose Landmark Positions
             pos_141, hand_detected = await asyncio.to_thread(extract_frame_positions, frame_bgr, True)
             buffer.add_frame_position(pos_141, hand_detected)
 
-            # 2. Periksa apakah buffer sudah cukup (minimal 6 frame) untuk inferensi instan
-            if buffer.is_ready():
+            # 2. Instant Streaming Inference (Super responsive: 6 frames ready, 80ms debounce)
+            if buffer.is_ready(min_frames=6):
                 detection_rate = buffer.get_detection_rate()
                 current_time = time.time()
 
-                # Inferensi jika tangan terdeteksi di minimal 15% frame (latensi debounce 100ms)
-                if detection_rate >= 0.15 and (current_time - last_pred_time >= 0.10):
-                    seq_features = buffer.get_sequence_features()
+                if detection_rate >= 0.15 and (current_time - last_pred_time >= 0.08):
+                    seq_features = buffer.get_sequence_features(min_frames=6)
                     if seq_features is not None:
                         pred_result = await asyncio.to_thread(recognizer.predict, seq_features)
                         last_pred_time = current_time
 
-                        # Kirim hasil prediksi ke klien
-                        try:
-                            await websocket.send_json({
-                                "type": "prediction",
-                                "predicted_gloss": pred_result["predicted_gloss"].upper(),
-                                "english": pred_result["english"],
-                                "confidence": pred_result["confidence"],
-                                "confidence_percent": pred_result["confidence_percent"],
-                                "class_id": pred_result["predicted_class_id"],
-                                "latency_ms": pred_result["latency_ms"],
-                                "hand_detected": hand_detected,
-                                "top_candidates": pred_result["top_candidates"]
-                            })
-                        except Exception:
-                            break
+                        # Instant direct delivery (only filter out absolute null/noise < 20%)
+                        if pred_result["confidence"] >= 0.20:
+                            try:
+                                await websocket.send_json({
+                                    "type": "prediction",
+                                    "predicted_gloss": pred_result["predicted_gloss"].upper(),
+                                    "english": pred_result["english"],
+                                    "confidence": pred_result["confidence"],
+                                    "confidence_percent": pred_result["confidence_percent"],
+                                    "class_id": pred_result["predicted_class_id"],
+                                    "latency_ms": pred_result["latency_ms"],
+                                    "hand_detected": hand_detected,
+                                    "top_candidates": pred_result["top_candidates"]
+                                })
+                            except Exception:
+                                break
                 else:
-                    # Kirim heartbeat status jika tangan tidak aktif bergerak
                     if frame_count % 8 == 0:
                         try:
                             await websocket.send_json({
@@ -172,12 +171,11 @@ async def handle_websocket_session(websocket: WebSocket):
                         except Exception:
                             break
             else:
-                # Buffer sedang mengumpulkan 16 frame awal
                 try:
                     await websocket.send_json({
                         "type": "buffering",
                         "frames_collected": len(buffer.pos_buffer),
-                        "target_frames": 16,
+                        "target_frames": 6,
                         "hand_detected": hand_detected
                     })
                 except Exception:

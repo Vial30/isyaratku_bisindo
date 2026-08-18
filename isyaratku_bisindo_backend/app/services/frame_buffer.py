@@ -29,9 +29,9 @@ class SequenceFrameBuffer:
         self.detected_buffer.append(hand_detected)
         self.frame_count += 1
 
-    def is_ready(self) -> bool:
-        """Returns True if at least 6 frames are available for instant inference."""
-        return len(self.pos_buffer) >= 6
+    def is_ready(self, min_frames: int = 6) -> bool:
+        """Returns True if at least min_frames (default 6) are available for instant inference."""
+        return len(self.pos_buffer) >= min_frames
 
     def get_detection_rate(self) -> float:
         """Calculates the fraction of frames in the buffer where hands were detected."""
@@ -39,16 +39,16 @@ class SequenceFrameBuffer:
             return 0.0
         return sum(1 for d in self.detected_buffer if d) / len(self.detected_buffer)
 
-    def get_sequence_features(self) -> Optional[np.ndarray]:
+    def get_sequence_features(self, min_frames: int = 6) -> Optional[np.ndarray]:
         """
         Builds and returns the (16, 282) feature array from the buffer.
         Interpolates missing hand frames and linearly resamples the temporal sequence to 16 frames.
         
         Returns:
-            np.ndarray of shape (16, 282) or None if buffer has fewer than 6 frames.
+            np.ndarray of shape (16, 282) or None if buffer has fewer than min_frames.
         """
         current_len = len(self.pos_buffer)
-        if current_len < 6:
+        if current_len < min_frames:
             return None
 
         pos_list = list(self.pos_buffer)

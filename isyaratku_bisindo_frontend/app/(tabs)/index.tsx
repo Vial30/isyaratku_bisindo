@@ -35,6 +35,8 @@ export default function KameraScreen() {
 
   // Live Prediction States
   const [currentWord, setCurrentWord] = useState<string | null>(null);
+  const [confidence, setConfidence] = useState<number | null>(null);
+  const [isStabilizing, setIsStabilizing] = useState(false);
   const [lastTranslatedTime, setLastTranslatedTime] = useState<string | null>(null);
   const [latency, setLatency] = useState(2.3);
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'connecting' | 'disconnected'>('connecting');
@@ -159,6 +161,8 @@ export default function KameraScreen() {
             const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 
             setCurrentWord(gloss);
+            setConfidence(acc);
+            setIsStabilizing(false);
             setLastTranslatedTime(timeStr);
             setLatency(lat);
             setHandDetected(res.hand_detected ?? true);
@@ -167,8 +171,12 @@ export default function KameraScreen() {
             saveLogEntry(gloss, lat, acc);
           } else if (res.type === 'buffering') {
             setHandDetected(res.hand_detected ?? false);
+            setIsStabilizing(false);
           } else if (res.type === 'status') {
             setHandDetected(res.hand_detected ?? false);
+            if (res.is_stabilizing !== undefined) {
+              setIsStabilizing(res.is_stabilizing);
+            }
           }
         } catch (err) {}
       };
@@ -529,7 +537,7 @@ export default function KameraScreen() {
         ) : (
           <View style={styles.emptyStateWrap}>
             <Text style={styles.emptyWordPlaceholder}>Siap Menerjemahkan</Text>
-            <Text style={styles.emptySubtext}>Arahkan tangan & tekan tombol di atas</Text>
+            <Text style={styles.emptySubtext}>Arahkan tangan & posisikan di bingkai kamera</Text>
           </View>
         )}
       </GlassCard>

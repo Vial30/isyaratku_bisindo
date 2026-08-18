@@ -1,0 +1,66 @@
+name: 🚀 CI/CD - Build & Deploy to IDCloudHost
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-backend:
+    name: 🧪 Test & Lint Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 📦 Install System Libraries & Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1 libglib2.0-0
+          python -m pip install --upgrade pip
+          pip install -r isyaratku_bisindo_backend/requirements.txt
+
+      - name: 🔍 Verify Model & Imports
+        run: |
+          cd isyaratku_bisindo_backend
+          python -c "from app.config import NUM_CLASSES; print(f'Config OK: {NUM_CLASSES} classes')"
+          python -c "from app.models.architecture import DeepResidualBiLSTMClassifier; print('Model Architecture Definition OK')"
+
+  deploy-idcloudhost:
+    name: 🌐 Deploy to IDCloudHost VPS
+    needs: test-backend
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🚀 Execute Remote SSH Commands on IDCloudHost
+        uses: appleboy/ssh-action@v1.0.3
+        continue-on-error: true
+        with:
+          host: ${{ secrets.IDCLOUDHOST_HOST }}
+          username: ${{ secrets.IDCLOUDHOST_USER || 'root' }}
+          key: ${{ secrets.IDCLOUDHOST_SSH_KEY }}
+          port: ${{ secrets.IDCLOUDHOST_PORT || 22 }}
+          script: |
+            echo "📥 Menarik pembaruan terbaru dari GitHub..."
+            cd /var/www/isyaratku || cd ~/isyaratku || cd $(pwd)
+            git pull origin main
+            
+            echo "🐳 Membangun ulang dan me-restart container..."
+            if command -v docker compose &> /dev/null; then
+              docker compose up -d --build
+            elif command -v systemctl &> /dev/null && systemctl is-active --quiet isyaratku-backend; then
+              systemctl restart isyaratku-backend
+              systemctl restart nginx
+            fi
+            
+            echo "✅ Deployment selesai!"

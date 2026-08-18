@@ -1,0 +1,17 @@
+__pycache__
+*.py[cod]
+.venv/
+venv/
+env/
+.git/
+.gitignore
+.agents/
+node_modules/
+model/dataset/
+model/dataset_frames/
+model/dataset_keypoints/
+*.zip
+*.tar.gz
+*.mp4
+*.avi
+isyaratku_bisindo_frontend/

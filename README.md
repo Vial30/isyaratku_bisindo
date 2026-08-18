@@ -84,8 +84,19 @@ Sistem dievaluasi secara ketat menggunakan metode **Leave-One-Subject-Out (LOSO)
 │   │   ├── routes/                 # WebSocket Endpoint (/v1/recognize) & REST API
 │   │   └── services/               # MediaPipe Extractor & Buffer Sekuens
 │   ├── weights/                    # Checkpoints Model PyTorch Terbaik (.pth)
+│   ├── Dockerfile                  # Containerization untuk IDCloudHost VPS / Cloud
 │   ├── run.py                      # Script Menjalankan Server
 │   └── requirements.txt            # Dependensi Python Backend
+│
+├── deploy/                         # Skrip & Konfigurasi Deployment IDCloudHost
+│   ├── setup_idcloudhost.sh        # Skrip Instalasi 1-Klik Ubuntu VPS IDCloudHost
+│   └── isyaratku-backend.service   # Systemd Service Unit File
+│
+├── nginx/                          # Konfigurasi Nginx Reverse Proxy (SSL & WSS)
+│   ├── nginx.conf
+│   └── conf.d/bisindo.conf
+│
+├── docker-compose.yml              # Orkestrasi Backend + Nginx Reverse Proxy
 │
 ├── isyaratku_bisindo_frontend/     # Aplikasi Mobile (React Native + Expo SDK 54)
 │   ├── app/
@@ -118,13 +129,13 @@ Sistem dievaluasi secara ketat menggunakan metode **Leave-One-Subject-Out (LOSO)
 ## 🚀 Panduan Memulai (*Quickstart Guide*)
 
 ### 1. Prasyarat (*Prerequisites*)
-* **Python 3.10+** (disarankan dengan GPU NVIDIA & CUDA Toolkit)
+* **Python 3.10+** (disarankan dengan GPU NVIDIA & CUDA Toolkit) atau **Docker & Docker Compose**
 * **Node.js 18+** & npm / yarn
 * **Aplikasi Expo Go** pada perangkat Android / iOS
 
 ---
 
-### 2. Menjalankan Backend Server
+### 2. Menjalankan Backend Server (Lokal)
 
 ```bash
 # Masuk ke direktori backend
@@ -141,7 +152,26 @@ python run.py
 
 ---
 
-### 3. Menjalankan Aplikasi Mobile Frontend
+### 3. Deployment Produksi ke IDCloudHost (Cloud VPS) 🌐
+
+Proyek ini telah dilengkapi dengan konfigurasi **Docker Compose**, **Nginx Reverse Proxy (WSS/SSL)**, dan **skrip instalasi 1-klik** untuk IDCloudHost:
+
+```bash
+# 1. SSH ke VPS IDCloudHost Anda
+ssh root@IP_SERVER_IDCLOUDHOST
+
+# 2. Clone repositori
+git clone https://github.com/Vial30/isyaratku_bisindo.git && cd isyaratku_bisindo
+
+# 3. Jalankan skrip setup otomatis 1-klik
+sudo bash deploy/setup_idcloudhost.sh
+```
+
+> 📖 **Panduan Lengkap IDCloudHost**: Lihat [DEPLOY_IDCLOUDHOST.md](DEPLOY_IDCLOUDHOST.md) untuk petunjuk lengkap pengaturan domain, SSL gratis Certbot (`wss://`), dan CI/CD GitHub Actions.
+
+---
+
+### 4. Menjalankan Aplikasi Mobile Frontend
 
 ```bash
 # Masuk ke direktori frontend
@@ -154,6 +184,7 @@ npm install
 npx expo start
 ```
 * Buka aplikasi **Expo Go** pada ponsel Anda, lalu scan QR Code yang muncul pada terminal.
+* Pada menu **Pengaturan**, masukkan URL server WebSocket IDCloudHost Anda (`wss://api.domain-anda.com/v1/recognize` atau `ws://IP_VPS:8000/v1/recognize`).
 
 ---
 

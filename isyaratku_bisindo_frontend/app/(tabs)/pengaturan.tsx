@@ -188,14 +188,17 @@ export default function PengaturanScreen() {
         </View>
 
         <GlassCard style={styles.card}>
-          <Text style={styles.label}>URL Server (WebSocket URL)</Text>
+          <Text style={styles.label}>URL Server Backend (IDCloudHost / Cloud / Lokal)</Text>
+          <Text style={{ fontSize: 12, color: '#64748B', marginBottom: 8, marginTop: -4 }}>
+            Contoh: <Text style={{ fontFamily: 'monospace', color: '#0D9488' }}>wss://api.domain-anda.com/v1/recognize</Text> atau <Text style={{ fontFamily: 'monospace', color: '#2563EB' }}>ws://IP-VPS:8000/v1/recognize</Text>
+          </Text>
           <View style={styles.inputBox}>
             <Ionicons name="server-outline" size={18} color="#94A3B8" style={styles.inputIcon} />
             <TextInput
               value={serverUrl}
               onChangeText={setServerUrl}
               style={styles.textInput}
-              placeholder="ws://192.168.x.x:8000/v1/recognize"
+              placeholder="wss://api.domain.com/v1/recognize"
               placeholderTextColor="#94A3B8"
               autoCapitalize="none"
               autoCorrect={false}

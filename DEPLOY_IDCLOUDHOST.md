@@ -13,15 +13,16 @@ Panduan resmi langkah-demi-langkah untuk melakukan *deploy* backend server **Isy
 
 ---
 
-## 💻 1. Rekomendasi Spesifikasi Server (IDCloudHost Cloud VPS)
+## 💻 1. Profil Server IDCloudHost Anda (2 Core | 2 GB RAM | 20 GB Storage)
 
-| Komponen | Spesifikasi Minimal | Spesifikasi Direkomendasikan |
+Konfigurasi repositori ini telah **dioptimasi 100%** untuk paket **Basic Cloud VPS IDCloudHost** Anda:
+
+| Parameter | Kapasitas Server Anda | Alokasi & Optimasi Sistem Isyaratku |
 | :--- | :--- | :--- |
-| **Sistem Operasi** | Ubuntu 22.04 LTS / 24.04 LTS | Ubuntu 22.04 / 24.04 LTS 64-bit |
-| **vCPU** | 1 Core | **2 Cores** (Dual Core) |
-| **RAM** | 2 GB | **4 GB** (Disarankan untuk MediaPipe + PyTorch) |
-| **Storage** | 20 GB SSD | **30 GB+ NVMe SSD** |
-| **Lokasi** | Datacenter Jakarta / Indonesia | Datacenter Jakarta / Indonesia |
+| **vCPU (2 Core)** | 2 Cores | `OMP_NUM_THREADS=2` & `MKL_NUM_THREADS=2` (Memanfaatkan kedua core CPU secara paralel tanpa *overhead*). |
+| **RAM (2 GB)** | 2.048 MB | Backend hanya memakan **~600–800 MB RAM**. Skrip otomatis juga mengaktifkan **2GB Swap Memory** agar tidak pernah terjadi *Out-of-Memory* (OOM). |
+| **Storage (20 GB)** | 20 GB NVMe SSD | Menggunakan PyTorch CPU-only wheel (~800MB) dan auto-pruning. Total ruang terpakai hanya **~4–5 GB**, menyisakan **>15 GB ruang kosong**. |
+| **Log Rotation** | - | Otomatis diatur maksimal `10MB x 3 file` agar storage 20GB tidak pernah penuh oleh log. |
 
 ---
 

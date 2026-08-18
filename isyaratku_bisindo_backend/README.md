@@ -1,6 +1,6 @@
-# 🚀 Isyaratku BISINDO Backend API & WebSocket Server
+# 🚀 Isyaratku BISINDO Backend Engine & WebSocket Server
 
-Backend server untuk aplikasi pengenalan bahasa isyarat BISINDO (Word-Level) menggunakan arsitektur **Dual-Stream Ensemble Deep Residual Bi-LSTM Fusion** (Akurasi **98.99%**).
+Backend server untuk sistem pengenalan bahasa isyarat BISINDO (Word-Level) yang di-deploy pada **IDCloudHost Cloud VPS** menggunakan arsitektur **Dual-Stream Ensemble Deep Residual Bi-LSTM Fusion** (Akurasi **98.99%**).
 
 ---
 
@@ -34,7 +34,7 @@ isyaratku_bisindo_backend/
 │   ├── services/
 │   │   ├── __init__.py
 │   │   ├── keypoint_extractor.py  # MediaPipe Hand & Pose Landmarker
-│   │   └── frame_buffer.py        # Sliding Window 16 Frame & Interpolasi
+│   │   └── frame_buffer.py        # Sliding Window 16 Frame & Resampling
 │   ├── routes/
 │   │   ├── __init__.py
 │   │   ├── rest.py                # REST Endpoints (/api/health, /api/model-info, dll)
@@ -49,7 +49,7 @@ isyaratku_bisindo_backend/
 ├── mediapipe_models/              # File Task MediaPipe
 │   ├── hand_landmarker.task
 │   └── pose_landmarker.task
-├── Dockerfile                     # Containerization untuk IDCloudHost
+├── Dockerfile                     # Containerization Khusus IDCloudHost
 ├── requirements.txt               # Daftar Dependensi Python
 ├── run.py                         # Skrip Menjalankan Server
 └── README.md
@@ -57,34 +57,22 @@ isyaratku_bisindo_backend/
 
 ---
 
-## ⚡ 3. Cara Menjalankan Server
+## ⚡ 3. Cara Menjalankan & Deployment ke IDCloudHost
 
-### A. Menjalankan Lokal (Python Direct)
+### A. Deployment Otomatis di IDCloudHost Cloud VPS (Direkomendasikan)
+Jalankan skrip instalasi 1-klik di terminal VPS IDCloudHost Anda:
 ```bash
-# 1. Masuk ke direktori backend
-cd isyaratku_bisindo_backend
-
-# 2. Install dependensi
-pip install -r requirements.txt
-
-# 3. Jalankan server
-python run.py
+sudo bash ../deploy/setup_idcloudhost.sh
 ```
-Server akan aktif di `http://0.0.0.0:8000` dan WebSocket di `ws://0.0.0.0:8000/v1/recognize`.
+Skrip ini akan otomatis menyiapkan Swap RAM 2GB, Docker, Nginx Reverse Proxy, dan menjalankan container backend.
 
-### B. Menjalankan dengan Docker Container
+### B. Menjalankan Manual dengan Docker
 ```bash
 # Build image
 docker build -t isyaratku-backend:latest .
 
 # Jalankan container
 docker run -d --name isyaratku_backend -p 8000:8000 isyaratku-backend:latest
-```
-
-### C. Deployment ke Cloud VPS IDCloudHost
-Lihat panduan lengkap di [../DEPLOY_IDCLOUDHOST.md](../DEPLOY_IDCLOUDHOST.md) atau jalankan:
-```bash
-sudo bash ../deploy/setup_idcloudhost.sh
 ```
 
 ---
@@ -94,24 +82,24 @@ sudo bash ../deploy/setup_idcloudhost.sh
 ### 🌐 REST Endpoints
 * **`GET /`** — Status server dan ringkasan API.
 * **`GET /docs`** — Dokumentasi interaktif Swagger UI.
-* **`GET /api/health`** — Status kesehatan server, GPU CUDA, dan model.
+* **`GET /api/health`** — Status kesehatan server, status RAM, dan model ensemble.
 * **`GET /api/model-info`** — Detail lengkap arsitektur ensemble & metrik evaluasi.
 * **`GET /api/labels`** — Daftar 32 kosakata kelas kata isyarat BISINDO.
 * **`POST /api/predict/keypoints`** — Prediksi langsung dari array koordinat keypoints `(16, 282)`.
 * **`POST /api/predict/video`** — Prediksi dari file video MP4 yang diunggah.
 
-### 📡 WebSocket Endpoint (Real-Time Streaming)
-* **`ws://localhost:8000/v1/recognize`** (atau `/ws/recognize`)
+### 📡 WebSocket Endpoint (Real-Time Streaming dari Aplikasi Android)
+* **`wss://api.domain-anda.com/v1/recognize`** (atau `ws://IP_IDCLOUDHOST:8000/v1/recognize`)
 
-#### Format Data yang Dikirim dari Frontend (Mobile):
-Frontend mengirim frame kamera secara berkala sebagai **binary JPEG** atau JSON:
+#### Format Frame yang Dikirim dari HP Android:
+Aplikasi Android mengirim frame kamera sebagai **binary JPEG** atau JSON:
 ```json
 {
   "frame": "base64_encoded_jpeg_string..."
 }
 ```
 
-#### Format Respons dari Backend:
+#### Format Respons Real-Time dari Backend:
 ```json
 {
   "type": "prediction",

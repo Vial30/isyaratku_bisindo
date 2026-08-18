@@ -1,50 +1,55 @@
-# Welcome to your Expo app 👋
+# 📱 Isyaratku BISINDO Mobile App (Android Client)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplikasi klien Android penerjemah Bahasa Isyarat Indonesia (**BISINDO**) tingkat kata secara *real-time* yang terhubung ke server backend **IDCloudHost Cloud VPS** via **WebSocket Secure (WSS)**.
 
-## Get started
+---
 
-1. Install dependencies
+## 🛠️ Tech Stack Frontend
+* **Platform**: Android OS (Android SDK 34 / Android 14 Ready)
+* **Framework**: React Native 0.76+ & Expo SDK 54
+* **Language**: TypeScript 5.x
+* **Camera Streaming**: Expo Camera (Fast Frame Capture)
+* **Network Protocol**: WebSockets (`wss://` / `ws://`)
+* **State & Storage**: React Hooks & AsyncStorage
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## 🚀 Cara Menjalankan & Membangun Aplikasi Android
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+### 1. Menjalankan di Perangkat Android (Development Mode)
 ```bash
-npm run reset-project
+# 1. Install dependensi
+npm install
+
+# 2. Jalankan di perangkat Android fisik / emulator via Android SDK
+npx expo run:android
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+### 2. Membangun File APK Android Standalone (.apk) Siap Pakai
+Anda dapat membuat file `.apk` mandiri yang dapat langsung diinstal di semua smartphone Android tanpa perlu laptop:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+# Install EAS CLI secara global (jika belum)
+npm install -g eas-cli
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+# Login ke akun Expo
+eas login
 
-## Join the community
+# Build APK Android mandiri
+eas build -p android --profile preview
+```
+Setelah proses build di cloud selesai, unduh dan instal file `.apk` ke ponsel Android Anda.
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## ⚙️ Menghubungkan ke Server IDCloudHost
+
+1. Buka aplikasi **Isyaratku** di smartphone Android.
+2. Masuk ke tab **Pengaturan**.
+3. Masukkan URL server IDCloudHost Anda:
+   * Dengan Domain/SSL: `wss://api.domain-anda.com/v1/recognize`
+   * Dengan IP VPS: `ws://IP_IDCLOUDHOST:8000/v1/recognize`
+4. Tekan **"Uji Latensi / Ping"** untuk memastikan koneksi berhasil.
+5. Tekan **"Simpan"**.

@@ -15,15 +15,13 @@ services:
       - PORT=8000
       - HOST=0.0.0.0
       - DEBUG=false
-      - OMP_NUM_THREADS=2
-      - MKL_NUM_THREADS=2
-    # Resource tuning for 2GB RAM / 2 Cores VPS
-    mem_limit: 1500m
+    # Generous memory limit for 8GB RAM VPS (prevents runaway memory while giving 6GB headroom)
+    mem_limit: 6000m
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "20m"
+        max-file: "5"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
       interval: 30s

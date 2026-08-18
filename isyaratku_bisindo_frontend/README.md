@@ -1,6 +1,6 @@
 # 📱 Isyaratku BISINDO Mobile App (Android Client)
 
-Aplikasi klien Android penerjemah Bahasa Isyarat Indonesia (**BISINDO**) tingkat kata secara *real-time* yang terhubung ke server backend **IDCloudHost Cloud VPS** via **WebSocket Secure (WSS)**.
+Aplikasi klien Android penerjemah Bahasa Isyarat Indonesia (**BISINDO**) tingkat kata secara *real-time* yang terhubung ke server backend **Cloud VPS Mandiri** via **WebSocket Secure (WSS)**.
 
 ---
 
@@ -44,12 +44,12 @@ Setelah proses build di cloud selesai, unduh dan instal file `.apk` ke ponsel An
 
 ---
 
-## ⚙️ Menghubungkan ke Server IDCloudHost
+## ⚙️ Menghubungkan ke Server Cloud VPS
 
 1. Buka aplikasi **Isyaratku** di smartphone Android.
 2. Masuk ke tab **Pengaturan**.
-3. Masukkan URL server IDCloudHost Anda:
+3. Masukkan URL server VPS Anda:
    * Dengan Domain/SSL: `wss://api.domain-anda.com/v1/recognize`
-   * Dengan IP VPS: `ws://IP_IDCLOUDHOST:8000/v1/recognize`
+   * Dengan IP VPS: `ws://IP_SERVER_VPS:8000/v1/recognize`
 4. Tekan **"Uji Latensi / Ping"** untuk memastikan koneksi berhasil.
 5. Tekan **"Simpan"**.

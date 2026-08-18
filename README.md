@@ -2,7 +2,7 @@
 
 # 🤟 Isyaratku: Real-Time Word-Level BISINDO Sign Recognition Using Deep Residual Bi-LSTM Fusion
 
-[![IDCloudHost](https://img.shields.io/badge/Hosted_on-IDCloudHost_Cloud_VPS-0070F3?style=for-the-badge&logo=icloud&logoColor=white)](https://idcloudhost.com)
+[![Cloud VPS](https://img.shields.io/badge/Hosted_on-Cloud_VPS_(8GB_RAM)-0070F3?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/Vial30/isyaratku_bisindo)
 [![Android](https://img.shields.io/badge/Android-SDK_34_(APK)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Production_Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![PyTorch](https://img.shields.io/badge/PyTorch-Deep_Bi--LSTM-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org)
@@ -11,7 +11,7 @@
 [![Accuracy](https://img.shields.io/badge/LOSO_Accuracy-98.99%25-brightgreen?style=for-the-badge)](https://github.com/Vial30/isyaratku_bisindo)
 
 <p align="center">
-  <b>Sistem Pengenalan Bahasa Isyarat Indonesia (BISINDO) Tingkat Kata Secara Real-Time Menggunakan Arsitektur Dual-Stream Deep Residual Bi-LSTM Fusion Berbasis Server Cloud IDCloudHost & Aplikasi Mobile Android.</b>
+  <b>Sistem Pengenalan Bahasa Isyarat Indonesia (BISINDO) Tingkat Kata Secara Real-Time Menggunakan Arsitektur Dual-Stream Deep Residual Bi-LSTM Fusion Berbasis Server Cloud VPS Mandiri & Aplikasi Mobile Android.</b>
 </p>
 
 </div>
@@ -30,8 +30,8 @@ Proyek penelitian ini menghadirkan **Isyaratku**, sebuah sistem pengenalan isyar
    - Mengekstrak ketergantungan temporal sekuens 16-frame dengan mekanisme atensi adaptif.
    - Menggabungkan probabilitas kedua aliran (*Soft Voting 50:50*).
 3. **Cloud-Native & Android Client Architecture**:
-   - **Backend Server**: Di-deploy pada **IDCloudHost Cloud VPS** (Datacenter Jakarta) terakselerasi CPU multi-threading, diproteksi Nginx Reverse Proxy dengan enkripsi SSL/WSS (*WebSocket Secure*).
-   - **Frontend Klien**: Aplikasi mandiri Android (**Standalone .apk**) yang dibangun menggunakan **Android SDK** & React Native untuk interaksi real-time tanpa latensi.
+   - **Backend Server**: Di-deploy pada **Cloud VPS Mandiri (8 GB RAM)** terakselerasi CPU multi-threading, diproteksi Nginx Reverse Proxy dengan enkripsi SSL/WSS (*WebSocket Secure*).
+   - **Frontend Klien**: Aplikasi mandiri Android (**Standalone .apk**) yang dibangun menggunakan **Android SDK** & React Native untuk interaksi real-time tanpa hambatan latensi.
 
 ---
 
@@ -47,7 +47,7 @@ Sistem dievaluasi secara ketat menggunakan metode **Leave-One-Subject-Out (LOSO)
 | **Signer 4 (Subjek 4)** | **99.38%** | 0.994 | 0.994 | 0.994 |
 | **RATA-RATA KESELURUHAN** | **98.99%** | **0.991** | **0.991** | **0.991** |
 
-> ⚡ **Latensi Inferensi Model**: **~2.3 ms / sekuens** pada GPU NVIDIA CUDA dan **~5–15 ms** pada IDCloudHost Cloud VPS CPU.
+> ⚡ **Latensi Inferensi Model**: **~2.3 ms / sekuens** pada GPU NVIDIA CUDA dan **~5–12 ms** pada Cloud VPS CPU (8 GB RAM).
 
 ---
 
@@ -58,7 +58,7 @@ Sistem dievaluasi secara ketat menggunakan metode **Leave-One-Subject-Out (LOSO)
                      │
                      │ Streaming Frame Kamera via WebSocket Secure (WSS :443)
                      ▼
-[ Server IDCloudHost Cloud VPS (Datacenter Jakarta) ]
+[ Server Cloud VPS Mandiri (8 GB RAM - Linux Server) ]
                      │
                      ├─► [ Nginx Reverse Proxy + SSL Let's Encrypt ]
                      │        │
@@ -91,12 +91,12 @@ Sistem dievaluasi secara ketat menggunakan metode **Leave-One-Subject-Out (LOSO)
 │   │   ├── routes/                 # WebSocket Endpoint (/v1/recognize) & REST API
 │   │   └── services/               # MediaPipe Extractor & Buffer Sekuens
 │   ├── weights/                    # Checkpoints Model PyTorch Terbaik (.pth)
-│   ├── Dockerfile                  # Containerization Khusus IDCloudHost
+│   ├── Dockerfile                  # Containerization Khusus Cloud VPS (8 GB RAM)
 │   ├── run.py                      # Skrip Menjalankan Server
 │   └── requirements.txt            # Dependensi Python Backend
 │
-├── deploy/                         # Skrip & Konfigurasi Deployment IDCloudHost
-│   ├── setup_idcloudhost.sh        # Skrip Instalasi Otomatis 1-Klik (2C/2G/20G VPS)
+├── deploy/                         # Skrip & Konfigurasi Deployment VPS
+│   ├── setup_vps.sh                # Skrip Instalasi Otomatis 1-Klik (Cloud VPS 8 GB)
 │   └── isyaratku-backend.service   # Systemd Service Unit File
 │
 ├── nginx/                          # Konfigurasi Nginx Reverse Proxy (SSL & WSS)
@@ -110,7 +110,7 @@ Sistem dievaluasi secara ketat menggunakan metode **Leave-One-Subject-Out (LOSO)
 │   │   ├── (tabs)/
 │   │   │   ├── index.tsx           # Kamera Real-Time Translator (Mode Auto & Rekam)
 │   │   │   ├── kamus.tsx           # Kamus 32 Kosakata Isyarat (Ilustrasi Vektor)
-│   │   │   └── pengaturan.tsx      # Konfigurasi URL IDCloudHost, Tes Ping & Latensi
+│   │   │   └── pengaturan.tsx      # Konfigurasi URL Server VPS, Tes Ping & Latensi
 │   │   │   └── _layout.tsx         # Tab Bar Navigation
 │   │   └── _layout.tsx             # Root Navigation
 │   ├── eas.json                    # Konfigurasi Build APK Android Standalone
@@ -118,7 +118,7 @@ Sistem dievaluasi secara ketat menggunakan metode **Leave-One-Subject-Out (LOSO)
 │   └── package.json                # Dependensi Frontend
 │
 ├── .github/workflows/              # CI/CD GitHub Actions
-│   └── deploy.yml                  # Auto Test & Deploy ke IDCloudHost via SSH
+│   └── deploy.yml                  # Auto Test & Deploy ke Cloud VPS via SSH
 │
 └── model/                          # Skrip Pelatihan, Bobot Model & Hasil Evaluasi Bab IV
     ├── training/                   # Skrip Pelatihan LOSO CV & Ekstraksi Koordinat
@@ -139,23 +139,23 @@ Sistem dievaluasi secara ketat menggunakan metode **Leave-One-Subject-Out (LOSO)
 
 ## 🚀 Panduan Deployment & Instalasi
 
-### 1. Menjalankan Server di IDCloudHost Cloud VPS 🌐
+### 1. Menjalankan Server di Cloud VPS Mandiri (8 GB RAM) 🌐
 
-Server backend siap di-deploy secara instan ke server **IDCloudHost** (dioptimasi untuk paket 2 Core / 2 GB RAM / 20 GB Storage):
+Server backend siap di-deploy secara instan ke server **Cloud VPS** Anda:
 
 ```bash
-# 1. Login ke VPS IDCloudHost melalui SSH
-ssh root@IP_SERVER_IDCLOUDHOST
+# 1. Login ke VPS Anda melalui SSH
+ssh root@IP_SERVER_VPS
 
 # 2. Clone repositori dari GitHub
 git clone https://github.com/Vial30/isyaratku_bisindo.git && cd isyaratku_bisindo
 
 # 3. Jalankan skrip setup otomatis 1-klik
-sudo bash deploy/setup_idcloudhost.sh
+sudo bash deploy/setup_vps.sh
 ```
 
 * Backend akan langsung aktif dan terproteksi di `http://IP_SERVER:80` dan `ws://IP_SERVER:8000/v1/recognize`.
-* Untuk mengaktifkan sertifikat SSL gratis (`wss://`), ikuti panduan lengkap di [DEPLOY_IDCLOUDHOST.md](DEPLOY_IDCLOUDHOST.md).
+* Untuk mengaktifkan domain dan sertifikat SSL gratis (`wss://`), ikuti panduan lengkap di [DEPLOY_VPS.md](DEPLOY_VPS.md).
 
 ---
 
@@ -174,7 +174,7 @@ npm install
 npx eas build -p android --profile preview
 ```
 * Setelah build selesai, unduh file `.apk` dan pasang di smartphone Android Anda.
-* Buka menu **Pengaturan** di aplikasi, masukkan URL server IDCloudHost (`wss://api.domain-anda.com/v1/recognize` atau `ws://IP_VPS:8000/v1/recognize`), dan tekan **Simpan**.
+* Buka menu **Pengaturan** di aplikasi, masukkan URL server VPS Anda (`wss://api.domain-anda.com/v1/recognize` atau `ws://IP_VPS:8000/v1/recognize`), dan tekan **Simpan**.
 
 ---
 
@@ -192,7 +192,7 @@ npx eas build -p android --profile preview
 
 ## 🛠️ Teknologi yang Digunakan (*Tech Stack*)
 
-* **Cloud Infrastructure**: IDCloudHost Cloud VPS (Ubuntu Linux, Datacenter Jakarta), Docker & Docker Compose, Nginx Reverse Proxy, Let's Encrypt SSL.
+* **Cloud Infrastructure**: Cloud VPS (Ubuntu 22.04/24.04 LTS, 8 GB RAM), Docker & Docker Compose, Nginx Reverse Proxy, Let's Encrypt SSL.
 * **Deep Learning Framework**: PyTorch 2.x, Torchvision, ONNX Runtime.
 * **Computer Vision**: Google MediaPipe (Hand Landmarker & Pose Landmarker), OpenCV Headless.
 * **Backend API & Streaming**: FastAPI, Uvicorn, WebSockets AsyncIO, NumPy.

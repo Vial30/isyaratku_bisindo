@@ -1,6 +1,6 @@
 # 🚀 Isyaratku BISINDO Backend Engine & WebSocket Server
 
-Backend server untuk sistem pengenalan bahasa isyarat BISINDO (Word-Level) yang di-deploy pada **IDCloudHost Cloud VPS** menggunakan arsitektur **Dual-Stream Ensemble Deep Residual Bi-LSTM Fusion** (Akurasi **98.99%**).
+Backend server untuk sistem pengenalan bahasa isyarat BISINDO (Word-Level) yang di-deploy pada **Cloud VPS Mandiri (8 GB RAM)** menggunakan arsitektur **Dual-Stream Ensemble Deep Residual Bi-LSTM Fusion** (Akurasi **98.99%**).
 
 ---
 
@@ -30,7 +30,7 @@ isyaratku_bisindo_backend/
 │   ├── models/
 │   │   ├── __init__.py
 │   │   ├── architecture.py        # Definisi PyTorch Deep Residual Bi-LSTM
-│   │   └── ensemble.py            # BISINDOEnsembleRecognizer (Soft Voting)
+│   │   └── ensemble.py            # BISINDOEnsembleRecognizer (Soft Voting & Auto-Cores)
 │   ├── services/
 │   │   ├── __init__.py
 │   │   ├── keypoint_extractor.py  # MediaPipe Hand & Pose Landmarker
@@ -49,7 +49,7 @@ isyaratku_bisindo_backend/
 ├── mediapipe_models/              # File Task MediaPipe
 │   ├── hand_landmarker.task
 │   └── pose_landmarker.task
-├── Dockerfile                     # Containerization Khusus IDCloudHost
+├── Dockerfile                     # Containerization Khusus Cloud VPS (8 GB RAM)
 ├── requirements.txt               # Daftar Dependensi Python
 ├── run.py                         # Skrip Menjalankan Server
 └── README.md
@@ -57,14 +57,14 @@ isyaratku_bisindo_backend/
 
 ---
 
-## ⚡ 3. Cara Menjalankan & Deployment ke IDCloudHost
+## ⚡ 3. Cara Menjalankan & Deployment ke Cloud VPS
 
-### A. Deployment Otomatis di IDCloudHost Cloud VPS (Direkomendasikan)
-Jalankan skrip instalasi 1-klik di terminal VPS IDCloudHost Anda:
+### A. Deployment Otomatis di Cloud VPS 8 GB (Direkomendasikan)
+Jalankan skrip instalasi 1-klik di terminal VPS Anda:
 ```bash
-sudo bash ../deploy/setup_idcloudhost.sh
+sudo bash ../deploy/setup_vps.sh
 ```
-Skrip ini akan otomatis menyiapkan Swap RAM 2GB, Docker, Nginx Reverse Proxy, dan menjalankan container backend.
+Skrip ini akan otomatis menyiapkan Swap RAM 4GB, Docker, Nginx Reverse Proxy, dan menjalankan container backend dengan alokasi memori tinggi.
 
 ### B. Menjalankan Manual dengan Docker
 ```bash
@@ -89,7 +89,7 @@ docker run -d --name isyaratku_backend -p 8000:8000 isyaratku-backend:latest
 * **`POST /api/predict/video`** — Prediksi dari file video MP4 yang diunggah.
 
 ### 📡 WebSocket Endpoint (Real-Time Streaming dari Aplikasi Android)
-* **`wss://api.domain-anda.com/v1/recognize`** (atau `ws://IP_IDCLOUDHOST:8000/v1/recognize`)
+* **`wss://api.domain-anda.com/v1/recognize`** (atau `ws://IP_SERVER_VPS:8000/v1/recognize`)
 
 #### Format Frame yang Dikirim dari HP Android:
 Aplikasi Android mengirim frame kamera sebagai **binary JPEG** atau JSON:

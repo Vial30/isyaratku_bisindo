@@ -21,9 +21,13 @@ from app.config import (
 from app.models.architecture import DeepResidualBiLSTMClassifier
 from app.utils.logger import logger
 
+import os
+
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 if DEVICE.type == "cpu":
-    torch.set_num_threads(2)
+    # Optimasi thread CPU dinamis sesuai kapasitas core VPS
+    num_cores = os.cpu_count() or 4
+    torch.set_num_threads(max(1, min(num_cores, 8)))
 
 class BISINDOEnsembleRecognizer:
     """

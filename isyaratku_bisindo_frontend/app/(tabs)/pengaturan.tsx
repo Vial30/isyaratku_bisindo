@@ -188,7 +188,7 @@ export default function PengaturanScreen() {
         </View>
 
         <GlassCard style={styles.card}>
-          <Text style={styles.label}>URL Server Backend (IDCloudHost / Cloud / Lokal)</Text>
+          <Text style={styles.label}>URL Server Backend (Cloud VPS / Domain WSS)</Text>
           <Text style={{ fontSize: 12, color: '#64748B', marginBottom: 8, marginTop: -4 }}>
             Contoh: <Text style={{ fontFamily: 'monospace', color: '#0D9488' }}>wss://api.domain-anda.com/v1/recognize</Text> atau <Text style={{ fontFamily: 'monospace', color: '#2563EB' }}>ws://IP-VPS:8000/v1/recognize</Text>
           </Text>

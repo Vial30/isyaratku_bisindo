@@ -54,7 +54,9 @@ export default function PengaturanScreen() {
 
   const handleSave = async () => {
     try {
-      await AsyncStorage.setItem('bisindo_server_url', serverUrl);
+      const cleanUrl = serverUrl.trim();
+      setServerUrl(cleanUrl);
+      await AsyncStorage.setItem('bisindo_server_url', cleanUrl);
       await AsyncStorage.setItem('bisindo_pref_haptic', hapticFeedback.toString());
       await AsyncStorage.setItem('bisindo_pref_sound', soundEffects.toString());
       await AsyncStorage.setItem('bisindo_pref_autosave', autoSaveHistory.toString());
@@ -62,7 +64,7 @@ export default function PengaturanScreen() {
       if (Platform.OS === 'web') {
         alert('Pengaturan berhasil disimpan!');
       } else {
-        Alert.alert('Sukses', 'Pengaturan aplikasi berhasil disimpan!');
+        Alert.alert('Sukses', 'Pengaturan URL server berhasil disimpan!');
       }
     } catch (e) {
       console.error(e);
@@ -70,30 +72,36 @@ export default function PengaturanScreen() {
   };
 
   const testConnection = () => {
+    const cleanUrl = serverUrl.trim();
+    setServerUrl(cleanUrl);
     setIsTesting(true);
     setTestStatus('Menguji koneksi server...');
     const startTime = Date.now();
 
     try {
-      const ws = new WebSocket(serverUrl);
+      const ws = new WebSocket(cleanUrl);
       const timer = setTimeout(() => {
         setIsTesting(false);
         setTestStatus('🔴 Timeout: Server tidak merespon');
         try { ws.close(); } catch (e) {}
-      }, 4000);
+      }, 5000);
 
       ws.onopen = () => {
         const pingTime = Date.now() - startTime;
         clearTimeout(timer);
         setIsTesting(false);
         setTestStatus(`🟢 Terhubung! Latensi: ${pingTime} ms`);
-        setTimeout(() => ws.close(), 1500);
+        // Auto-save verified valid URL to AsyncStorage
+        AsyncStorage.setItem('bisindo_server_url', cleanUrl).catch(() => {});
+        setTimeout(() => {
+          try { ws.close(); } catch (e) {}
+        }, 1500);
       };
 
       ws.onerror = () => {
         clearTimeout(timer);
         setIsTesting(false);
-        setTestStatus('🔴 Gagal: Periksa IP & Wi-Fi Laptop');
+        setTestStatus('🔴 Gagal: Periksa IP & Port Server');
       };
     } catch (err) {
       setIsTesting(false);
@@ -149,7 +157,7 @@ export default function PengaturanScreen() {
         <View style={styles.heroCard}>
           <View style={styles.heroHeader}>
             <View style={styles.heroIconBox}>
-              <Ionicons name="finger-print" size={28} color="#1E3A8A" />
+              <Ionicons name="hand-left" size={28} color="#1E3A8A" />
             </View>
             <View style={styles.heroTextWrap}>
               <View style={styles.heroTitleRow}>
@@ -402,7 +410,7 @@ export default function PengaturanScreen() {
 
         {/* App Footer Credits */}
         <View style={styles.footerWrap}>
-          <Text style={styles.footerAppName}>Isyaratku BISINDO v1.0.0 Pro</Text>
+          <Text style={styles.footerAppName}>Isyaratku BISINDO v1.2.0 Pro</Text>
           <Text style={styles.footerCopyright}>© 2026 Inovasi Aksesibilitas Bahasa Isyarat Indonesia</Text>
         </View>
       </ScrollView>
@@ -587,7 +595,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 16,
-    paddingBottom: 95,
+    paddingBottom: 40,
   },
 
   // Hero Card

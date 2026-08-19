@@ -3,8 +3,16 @@ Runner script for Isyaratku BISINDO Backend.
 Usage:
     python run.py
 """
+import sys
+import io
 import socket
 import uvicorn
+
+# Force UTF-8 on Windows consoles to prevent charmap encoding errors
+if sys.platform == "win32" and hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+
 from app.config import HOST, PORT, DEBUG
 
 def get_local_ip():

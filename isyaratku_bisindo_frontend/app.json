@@ -2,7 +2,10 @@
   "expo": {
     "name": "Isyaratku BISINDO",
     "slug": "isyaratku-bisindo",
-    "version": "1.0.0",
+    "version": "1.2.0",
+    "description": "Aplikasi Pengenalan Bahasa Isyarat BISINDO Real-Time Berbasis Deep Residual Bi-LSTM Ensemble Fusion.",
+    "primaryColor": "#1E3A8A",
+    "githubUrl": "https://github.com/Vial30/isyaratku_bisindo",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "jovgans",
@@ -16,14 +19,20 @@
     },
     "android": {
       "package": "id.isyaratku.app",
+      "versionCode": 2,
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#0A0F1D",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "permissions": [
-        "android.permission.CAMERA"
+        "android.permission.CAMERA",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.ACCESS_WIFI_STATE",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
@@ -44,15 +53,29 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#0A0F1D",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#0A0F1D"
+          }
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
           }
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "520638df-e306-4fbd-ba16-0f4de42e1dd6"
+      }
     }
   }
 }

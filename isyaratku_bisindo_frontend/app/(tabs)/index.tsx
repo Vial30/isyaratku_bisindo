@@ -204,6 +204,13 @@ export default function KameraScreen() {
     }
   }, [saveLogEntry]);
 
+  // Reconnect with latest saved URL whenever user returns to the Kamera tab
+  useEffect(() => {
+    if (isFocused) {
+      connectWebSocket();
+    }
+  }, [isFocused, connectWebSocket]);
+
   // Keep-alive heartbeat ping every 10s to prevent Wi-Fi timeout or idle disconnect
   useEffect(() => {
     connectWebSocket();
@@ -337,7 +344,7 @@ export default function KameraScreen() {
       <View style={styles.header}>
         <View style={styles.titleWrap}>
           <View style={styles.appIconCircle}>
-            <Ionicons name="finger-print" size={18} color="#1E3A8A" />
+            <Ionicons name="hand-left" size={18} color="#1E3A8A" />
           </View>
           <View>
             <Text style={styles.title}>Isyaratku</Text>
@@ -400,7 +407,7 @@ export default function KameraScreen() {
         </View>
       </View>
 
-      {/* Camera Preview Frame — Wide Portrait View (Zoom={0} for Maximum Field of View) */}
+      {/* Camera Preview Frame — 3:4 Pro Portrait Ratio */}
       <View style={styles.cameraFrame}>
         {permission && permission.granted ? (
           <>
@@ -414,7 +421,7 @@ export default function KameraScreen() {
               animateShutter={false}
             />
 
-            {/* Viewfinder Target Box — Wide Scope */}
+            {/* Viewfinder Target Reticle */}
             <Animated.View
               style={[
                 styles.trackingBox,
@@ -422,36 +429,44 @@ export default function KameraScreen() {
                 handDetected ? styles.trackingBoxActive : null,
               ]}
             >
-              <View style={styles.trackingCornerTL} />
-              <View style={styles.trackingCornerTR} />
-              <View style={styles.trackingCornerBL} />
-              <View style={styles.trackingCornerBR} />
-              <View style={[styles.trackingTag, handDetected && styles.trackingTagActive]}>
-                <Text style={styles.trackingTagText}>
-                  {handDetected ? 'Tangan Terdeteksi' : 'Posisikan Kepala & Tangan'}
-                </Text>
-              </View>
+              <View style={[styles.trackingCornerTL, handDetected && styles.trackingCornerActive]} />
+              <View style={[styles.trackingCornerTR, handDetected && styles.trackingCornerActive]} />
+              <View style={[styles.trackingCornerBL, handDetected && styles.trackingCornerActive]} />
+              <View style={[styles.trackingCornerBR, handDetected && styles.trackingCornerActive]} />
             </Animated.View>
 
-            {/* Top-Right Quick Camera Controls */}
-            <View style={styles.cameraOverlayBtns}>
+            {/* Top-Left Floating AI Vision Status Badge (Theme Aligned) */}
+            <View style={[styles.aiScanBadge, handDetected && styles.aiScanBadgeActive]}>
+              <Ionicons
+                name={handDetected ? 'checkmark-circle' : 'scan-outline'}
+                size={13}
+                color={handDetected ? '#15803D' : '#1E3A8A'}
+              />
+              <Text style={[styles.aiScanText, handDetected && styles.aiScanTextActive]}>
+                {handDetected ? 'Tangan Terdeteksi' : 'Posisikan Tangan & Kepala'}
+              </Text>
+            </View>
+
+            {/* Top-Right Sleek Theme-Aligned Camera Toolbar */}
+            <View style={styles.cameraGlassToolbar}>
               <TouchableOpacity
-                style={[styles.circleBtn, flashOn && styles.circleBtnActive]}
+                style={[styles.glassControlBtn, flashOn && styles.glassControlBtnActive]}
                 onPress={() => setFlashOn(!flashOn)}
                 activeOpacity={0.7}
               >
                 <Ionicons
-                  name={flashOn ? 'flash' : 'flash-off'}
+                  name={flashOn ? 'flash' : 'flash-off-outline'}
                   size={16}
-                  color={flashOn ? '#1E3A8A' : '#0F172A'}
+                  color={flashOn ? '#D97706' : '#1E3A8A'}
                 />
               </TouchableOpacity>
+              <View style={styles.glassToolbarDivider} />
               <TouchableOpacity
-                style={styles.circleBtn}
+                style={styles.glassControlBtn}
                 onPress={toggleCameraFacing}
                 activeOpacity={0.7}
               >
-                <Ionicons name="camera-reverse-outline" size={16} color="#0F172A" />
+                <Ionicons name="camera-reverse-outline" size={17} color="#1E3A8A" />
               </TouchableOpacity>
             </View>
           </>
@@ -551,7 +566,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.background,
     paddingHorizontal: 16,
     paddingTop: Platform.OS === 'android' ? 6 : 0,
-    paddingBottom: 68,
+    paddingBottom: 16,
     justifyContent: 'space-between',
   },
   header: {
@@ -651,9 +666,9 @@ const styles = StyleSheet.create({
     borderRadius: 2.5,
   },
   cameraFrame: {
-    height: width * 0.96, // Balanced 3:4 portrait view: wide angle and captures head to chest + hands
+    height: width * 1.02, // Balanced height: captures full gesture while leaving abundant space for translation card
     backgroundColor: '#0F172A',
-    borderRadius: 16,
+    borderRadius: 20,
     borderWidth: 1.5,
     borderColor: '#CBD5E1',
     overflow: 'hidden',
@@ -661,6 +676,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 5,
+    shadowColor: '#1E3A8A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 3,
   },
   cameraPermissionBox: {
     alignItems: 'center',
@@ -708,17 +728,87 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
   },
+  aiScanBadge: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    shadowColor: '#1E3A8A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+    zIndex: 10,
+  },
+  aiScanBadgeActive: {
+    backgroundColor: '#F0FDF4',
+    borderColor: '#86EFAC',
+  },
+  aiScanText: {
+    color: '#1E3A8A',
+    fontSize: 9.5,
+    fontWeight: '700',
+    letterSpacing: 0.2,
+  },
+  aiScanTextActive: {
+    color: '#15803D',
+  },
+  cameraGlassToolbar: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.94)',
+    borderRadius: 20,
+    paddingHorizontal: 4,
+    paddingVertical: 3,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    shadowColor: '#1E3A8A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+    zIndex: 10,
+  },
+  glassControlBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+  },
+  glassControlBtnActive: {
+    backgroundColor: '#FEF3C7',
+  },
+  glassToolbarDivider: {
+    width: 1,
+    height: 16,
+    backgroundColor: '#E2E8F0',
+    marginHorizontal: 3,
+  },
   trackingBox: {
     position: 'absolute',
-    top: '8%',
-    left: '8%',
-    width: '84%',
-    height: '84%',
-    borderRadius: 14,
-    backgroundColor: 'rgba(37, 99, 235, 0.02)',
+    top: '7%',
+    left: '6%',
+    width: '88%',
+    height: '86%',
+    borderRadius: 18,
+    backgroundColor: 'transparent',
+    pointerEvents: 'none',
   },
   trackingBoxActive: {
-    backgroundColor: 'rgba(16, 185, 129, 0.05)',
+    backgroundColor: 'rgba(22, 163, 74, 0.04)',
   },
   trackingCornerTL: {
     position: 'absolute',
@@ -726,8 +816,8 @@ const styles = StyleSheet.create({
     left: 0,
     width: 22,
     height: 22,
-    borderTopWidth: 3,
-    borderLeftWidth: 3,
+    borderTopWidth: 2.5,
+    borderLeftWidth: 2.5,
     borderColor: '#2563EB',
     borderTopLeftRadius: 10,
   },
@@ -737,8 +827,8 @@ const styles = StyleSheet.create({
     right: 0,
     width: 22,
     height: 22,
-    borderTopWidth: 3,
-    borderRightWidth: 3,
+    borderTopWidth: 2.5,
+    borderRightWidth: 2.5,
     borderColor: '#2563EB',
     borderTopRightRadius: 10,
   },
@@ -748,8 +838,8 @@ const styles = StyleSheet.create({
     left: 0,
     width: 22,
     height: 22,
-    borderBottomWidth: 3,
-    borderLeftWidth: 3,
+    borderBottomWidth: 2.5,
+    borderLeftWidth: 2.5,
     borderColor: '#2563EB',
     borderBottomLeftRadius: 10,
   },
@@ -759,47 +849,13 @@ const styles = StyleSheet.create({
     right: 0,
     width: 22,
     height: 22,
-    borderBottomWidth: 3,
-    borderRightWidth: 3,
+    borderBottomWidth: 2.5,
+    borderRightWidth: 2.5,
     borderColor: '#2563EB',
     borderBottomRightRadius: 10,
   },
-  trackingTag: {
-    position: 'absolute',
-    top: -20,
-    left: 4,
-    backgroundColor: '#2563EB',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  trackingTagActive: {
-    backgroundColor: '#0D9488',
-  },
-  trackingTagText: {
-    color: '#FFFFFF',
-    fontSize: 8.5,
-    fontWeight: '700',
-  },
-  cameraOverlayBtns: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    gap: 6,
-  },
-  circleBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
-  circleBtnActive: {
-    backgroundColor: '#DBEAFE',
-    borderColor: '#93C5FD',
+  trackingCornerActive: {
+    borderColor: '#16A34A',
   },
   modeSwitchCard: {
     paddingVertical: 8,
